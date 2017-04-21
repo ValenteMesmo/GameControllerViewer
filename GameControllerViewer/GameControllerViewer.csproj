@@ -56,6 +56,7 @@
     <Content Include="Content\base.png" />
     <Content Include="Content\button_analog.png" />
     <Content Include="Content\button_dpad.png" />
+    <Content Include="Content\button_dpad2.png" />
     <Content Include="Content\button_round.png" />
     <Content Include="Content\button_shoulder.png" />
     <Content Include="Content\button_shoulder_actual.png" />

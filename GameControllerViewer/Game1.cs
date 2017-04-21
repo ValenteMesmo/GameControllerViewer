@@ -27,19 +27,21 @@ namespace GameControllerViewer
         Texture2D TriggerButton;
         Texture2D StartButton;
         Texture2D DPadButton;
+        Texture2D DPadButton2;
         Texture2D AnalogStick;
 
         protected override void LoadContent()
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
-
+            
             ControllerTexture = Content.Load<Texture2D>("base");
             RoundButton = Content.Load<Texture2D>("button_round");
             ShouderButton = Content.Load<Texture2D>("button_shoulder_actual");
             TriggerButton = Content.Load<Texture2D>("button_shoulder");
             StartButton = Content.Load<Texture2D>("button_start");
-            DPadButton = Content.Load<Texture2D>("button_dpad"); ;
+            DPadButton = Content.Load<Texture2D>("button_dpad"); 
             AnalogStick = Content.Load<Texture2D>("button_analog"); ;
+            DPadButton2 = Content.Load<Texture2D>("button_dpad2");
         }
 
 
@@ -56,62 +58,124 @@ namespace GameControllerViewer
         {
             GamePadState gamePadState = GamePad.GetState(PlayerIndex.One);
 
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.Blue);
             spriteBatch.Begin();
+
+            var color = new Color(0,255,0);
+            var color_focus = new Color(255, 0, 0);
 
             //base
             spriteBatch.Draw(
                 ControllerTexture,
                 new Rectangle(0, 0, ControllerTexture.Width, ControllerTexture.Height),
-                Color.Green);
+                color);
+
+            var dpad_X = 30;
+            var dpad_Y = -10;
+            //dup
+            spriteBatch.Draw(
+                DPadButton,
+                new Rectangle(100 + dpad_X, 120 + dpad_Y, DPadButton.Width, DPadButton.Height),
+                gamePadState.DPad.Up == ButtonState.Pressed ? color_focus : color);
+            
+            //ddown
+            spriteBatch.Draw(
+                DPadButton,
+                new Rectangle(100 + dpad_X, 165 + dpad_Y, ShouderButton.Width, ShouderButton.Height),
+                null,
+                gamePadState.DPad.Down == ButtonState.Pressed ?color_focus : color,
+                0f,
+                new Vector2(0, 0),
+                SpriteEffects.FlipVertically,
+                0f);
+
+            //dright
+            spriteBatch.Draw(
+                DPadButton2,
+                new Rectangle(115 + dpad_X, 145 + dpad_Y, DPadButton.Width, DPadButton.Height),
+                gamePadState.DPad.Right == ButtonState.Pressed ?color_focus : color);
+
+            //dleft
+            spriteBatch.Draw(
+                DPadButton2,
+                new Rectangle(80 + dpad_X, 145 + dpad_Y, ShouderButton.Width, ShouderButton.Height),
+                null,
+                gamePadState.DPad.Left == ButtonState.Pressed ?color_focus : color,
+                0f,
+                new Vector2(0, 0),
+                SpriteEffects.FlipHorizontally,
+                0f);
 
             //x
             spriteBatch.Draw(
                 RoundButton,
                 new Rectangle(460, 165, RoundButton.Width, RoundButton.Height),
-                gamePadState.Buttons.A == ButtonState.Pressed ? Color.Red : Color.Green);
+                gamePadState.Buttons.A == ButtonState.Pressed ?color_focus : color);
 
             //triangulo
             spriteBatch.Draw(
                 RoundButton,
                 new Rectangle(460, 100, RoundButton.Width, RoundButton.Height),
-                gamePadState.Buttons.Y == ButtonState.Pressed ? Color.Red : Color.Green);
+                gamePadState.Buttons.Y == ButtonState.Pressed ?color_focus : color);
 
             //quadrado
             spriteBatch.Draw(
                 RoundButton,
                 new Rectangle(420, 135, RoundButton.Width, RoundButton.Height),
-                gamePadState.Buttons.X == ButtonState.Pressed ? Color.Red : Color.Green);
+                gamePadState.Buttons.X == ButtonState.Pressed ?color_focus : color);
 
             //bola
             spriteBatch.Draw(
                 RoundButton,
                 new Rectangle(500, 135, RoundButton.Width, RoundButton.Height),
-                gamePadState.Buttons.B == ButtonState.Pressed ? Color.Red : Color.Green);
-
+                gamePadState.Buttons.B == ButtonState.Pressed ?color_focus : color);
+                        
             //start
             spriteBatch.Draw(
                 StartButton,
-                new Rectangle(400, 135, RoundButton.Width, RoundButton.Height),
-                gamePadState.Buttons.Start == ButtonState.Pressed ? Color.Red : Color.Green);
+                new Rectangle(380,70, RoundButton.Width, RoundButton.Height),
+                gamePadState.Buttons.Start == ButtonState.Pressed ?color_focus : color);
 
             //select
             spriteBatch.Draw(
                 StartButton,
-                new Rectangle(308, 135, RoundButton.Width, RoundButton.Height),
-                gamePadState.Buttons.Back == ButtonState.Pressed ? Color.Red : Color.Green);
-
-            //r1
-            spriteBatch.Draw(
-                ShouderButton,
-                new Rectangle(460, 50, ShouderButton.Width, ShouderButton.Height),
-                gamePadState.Buttons.RightShoulder == ButtonState.Pressed ? Color.Red : Color.Green);
+                new Rectangle(190, 70, RoundButton.Width, RoundButton.Height),
+                gamePadState.Buttons.Back == ButtonState.Pressed ?color_focus : color);
 
             //r2
             spriteBatch.Draw(
                 TriggerButton,
                 new Rectangle(460, 25, TriggerButton.Width, TriggerButton.Height),
-                new Color(gamePadState.Triggers.Right, 1f - gamePadState.Triggers.Right, 0));
+                gamePadState.Triggers.Right >0 ? color_focus : color);
+            
+            //r1            
+            spriteBatch.Draw(
+                ShouderButton,
+                new Rectangle(460, 40, ShouderButton.Width, ShouderButton.Height),
+                null,
+                gamePadState.Buttons.RightShoulder == ButtonState.Pressed ?color_focus : color,
+                0f,
+                new Vector2(0, 0),
+                SpriteEffects.FlipHorizontally,
+                0f);
+
+            //l2            
+            spriteBatch.Draw(
+                TriggerButton,
+                new Rectangle(125, 25, TriggerButton.Width, TriggerButton.Height),
+                null,
+                gamePadState.Triggers.Left > 0 ? color_focus : color,
+                0f,
+                new Vector2(0, 0),
+                SpriteEffects.FlipHorizontally,
+                0f);
+            //l1
+            spriteBatch.Draw(
+                ShouderButton,
+                new Rectangle(125, 40, ShouderButton.Width, ShouderButton.Height),
+                gamePadState.Buttons.LeftShoulder == ButtonState.Pressed ?color_focus : color);
+
+            
 
             //L
             spriteBatch.Draw(
@@ -121,7 +185,7 @@ namespace GameControllerViewer
                     200 - (int)(gamePadState.ThumbSticks.Left.Y * 15),
                     AnalogStick.Width,
                     AnalogStick.Height),
-                gamePadState.Buttons.LeftStick == ButtonState.Pressed ? Color.Red : Color.Green);
+                gamePadState.Buttons.LeftStick == ButtonState.Pressed ?color_focus : color);
 
             //R
             spriteBatch.Draw(
@@ -131,7 +195,7 @@ namespace GameControllerViewer
                     200 - (int)(gamePadState.ThumbSticks.Right.Y * 15),
                     AnalogStick.Width,
                     AnalogStick.Height),
-                gamePadState.Buttons.RightStick == ButtonState.Pressed ? Color.Red : Color.Green);
+                gamePadState.Buttons.RightStick == ButtonState.Pressed ?color_focus : color);
 
 
             spriteBatch.End();
